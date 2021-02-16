@@ -1,9 +1,10 @@
-from wavy import Application
+from myframework import Application
 import views
 
 urlpatterns = {
     '/': views.main_view,
     '/about/': views.about_view,
+'/contact/': views.contact_view
 }
 
 
