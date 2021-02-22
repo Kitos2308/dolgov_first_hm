@@ -13,6 +13,22 @@ def about_view(request):
 
 
 
+
+def create_course(request):
+    return '200 ок', render('create_course.html')
+
+def create_category(request):
+    return '200 ok', render('create_category.html')
+
+
+def copy_course(request):
+
+    return '200 OK', render('course_list.html')
+
+def category_list(request):
+    return '200 ok', render('category_list.html')
+
+
 def contact_view(request):
     # Проверка метода запроса
     if request['method'] == 'POST':
