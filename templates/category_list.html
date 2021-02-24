@@ -9,7 +9,7 @@
 
     {% for item in objects_list %}
     <li>
-        {{item.name}} <span>Количество категорий: {{item.course_count()}}</span>
+        {{item.name}} <span> {{item.course_count()}}</span>
     </li>
     {% endfor %}
 </ul>

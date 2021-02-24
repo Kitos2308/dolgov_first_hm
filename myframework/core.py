@@ -2,6 +2,13 @@ import quopri
 
 class Application:
 
+    def add_route(self, url):
+        # паттерн декоратор
+        def inner(view):
+            self.urlpatterns[url] = view
+
+        return inner
+
     def decode_value(val):
         val_b = bytes(val.replace('%', '=').replace("+", " "), 'UTF-8')
         val_decode_str = quopri.decodestring(val_b)
