@@ -46,8 +46,8 @@ class Category:
             result += self.category.course_count()
         return result
 
-    def show_course(self):
-        return self.courses
+    def show_name_category(self):
+        return self.name
 
 
 # Курс

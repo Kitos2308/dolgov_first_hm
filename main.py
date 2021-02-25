@@ -11,7 +11,7 @@ logger = Logger('main')
 
 
 def main_view(request):
-    logger.log('Список курсов')
+    logger.log("main_view")
     print(f'Список курсов - {site.courses}')
     return '200 OK', render('course_list.html', objects_list=site.courses)
 
@@ -89,7 +89,7 @@ def category_list(request):
     return '200 OK', render('category_list.html', objects_list=site.categories)
 
 def course_list(request):
-
+    logger.log('Список курсов')
     return '200, ok',  render('_course-list_.html', objects_list=site.categories)
 
 
@@ -109,7 +109,6 @@ urlpatterns = {
 
     # '/_course-list_/(?P<pk>\d+)/$':all_course,
 
-
 }
 
 
@@ -122,3 +121,8 @@ front_controllers = [
 ]
 
 application = Application(urlpatterns, front_controllers)
+
+
+@application.add_route('/about/')
+def about(request):
+    return '200, ok', render('about.html')
