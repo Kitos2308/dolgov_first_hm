@@ -1,6 +1,6 @@
 from myframework import render, Application
 from models import TrainingSite
-from logging_mod import Logger
+from logging_mod import Logger, debug
 
 # Создание копирование курса, список курсов
 # Регистрация пользователя, список пользователей
@@ -81,7 +81,7 @@ def copy_course(request):
 
     return '200 OK', render('course_list.html', objects_list=site.courses)
 
-
+@debug
 def category_list(request):
     logger.log('Список категорий')
     print("====================================================")

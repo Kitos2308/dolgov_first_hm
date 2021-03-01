@@ -2,6 +2,8 @@ import quopri
 
 class Application:
 
+
+
     def add_route(self, url):
         # паттерн декоратор
         def inner(view):
