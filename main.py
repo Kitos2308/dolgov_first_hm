@@ -1,6 +1,7 @@
 from myframework import render, Application
 from models import TrainingSite
 from logging_mod import Logger, debug
+from myframework.mycore_cbv import ListView, CreateView
 
 # Создание копирование курса, список курсов
 # Регистрация пользователя, список пользователей
@@ -38,30 +39,52 @@ def create_course(request):
         return '200 OK', render('create_course.html', categories=categories)
 
 
-def create_category(request):
-    if request['method'] == 'POST':
-        # метод пост
-        data = request['data']
-        # print(data)
-        name = data['name']
 
+
+class CreateStudentView(CreateView):
+    template_name = "create_student.html"
+
+
+    def create_obj(self, data: dict):
+        name = data['name']
+        name = Application.decode_value(name)
+        new_obj = site.create_user('student', name)
+        site.students.append(new_obj)
+
+
+
+
+
+
+
+
+class CreateCategoryView(CreateView):
+    template_name ="create_category.html"
+
+    def get_context_data(self):
+        context = super().get_context_data()
+        context['categories'] = site.categories
+        return context
+
+
+    def create_obj(self, data: dict):
+
+        name = data['name']
         name = Application.decode_value(name)
         category_id = data.get('category_id')
+
 
         category = None
         if category_id:
             category = site.find_category_by_id(int(category_id))
 
         new_category = site.create_category(name, category)
-
         site.categories.append(new_category)
-        # редирект?
-        # return '302 Moved Temporarily', render('create_course.html')
-        # Для начала можно без него
-        return '200 OK', render('create_category.html')
-    else:
-        categories = site.categories
-        return '200 OK', render('create_category.html', categories=categories)
+
+
+
+
+
 
 
 def copy_course(request):
@@ -102,10 +125,11 @@ def course_list(request):
 urlpatterns = {
     '/': main_view,
     '/create-course/': create_course,
-    '/create-category/': create_category,
+    '/create-category/': CreateCategoryView(),
     '/copy-course/': copy_course,
     '/category-list/': category_list,
     '/_course-list_/': course_list,
+    '/create-student/': CreateStudentView(),
 
     # '/_course-list_/(?P<pk>\d+)/$':all_course,
 

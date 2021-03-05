@@ -3,7 +3,8 @@ from reusepatterns.prototypes import PrototypeMixin
 
 # абстрактный пользователь
 class User:
-    pass
+    def __init__(self, name):
+        self.name=name
 
 
 # преподаватель
@@ -13,7 +14,10 @@ class Teacher(User):
 
 # студент
 class Student(User):
-    pass
+    def __init__(self, name):
+        self.courses = []
+        super().__init__(name)
+
 
 
 # Фабрика пользователей
@@ -24,8 +28,8 @@ class UserFactory:
     }
 
     @classmethod
-    def create(cls, type_):
-        return cls.types[type_]()
+    def create(cls, type_, name):
+        return cls.types[type_](name)
 
 
 # Категория
@@ -91,15 +95,14 @@ class TrainingSite:
         self.courses = []
         self.categories = []
 
-    @staticmethod
-    def create_user(type_):
-        return UserFactory.create(type_)
+
 
     @staticmethod
     def create_category(name, category=None):
         return Category(name, category)
 
     def find_category_by_id(self, id):
+        print("++++++++++++++++++++++ID+++++++++++++++++++++++++++++++", id)
         for item in self.categories:
             print('item', item.id)
             if item.id == id:
@@ -115,3 +118,17 @@ class TrainingSite:
             if item.name == name:
                 return item
         return None
+
+    @staticmethod
+    def create_user(type_, name):
+        return UserFactory.create(type_, name)
+
+    def get_course(self, name) -> Course:
+        for item in self.courses:
+            if item.name == name:
+                return item
+
+    def get_student(self, name) -> Student:
+        for item in self.students:
+            if item.name == name:
+                return item
