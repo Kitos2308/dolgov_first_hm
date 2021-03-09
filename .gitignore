@@ -1,1 +1,4 @@
 env
+__pycache__/models.cpython-37.pyc
+myframework/__pycache__/core.cpython-37.pyc
+myframework/__pycache__/mycore_cbv.cpython-37.pyc

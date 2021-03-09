@@ -60,6 +60,3 @@ class CreateView(TemplateView):
         else:
             print(request)
             return super().__call__(request)
-
-
-

@@ -54,6 +54,9 @@ class CreateStudentView(CreateView):
 
 
 
+class ListStudent(ListView):
+    template_name = 'student_list.html'
+    queryset = site.students
 
 
 
@@ -68,7 +71,7 @@ class CreateCategoryView(CreateView):
 
 
     def create_obj(self, data: dict):
-
+        print(data)
         name = data['name']
         name = Application.decode_value(name)
         category_id = data.get('category_id')
@@ -82,7 +85,25 @@ class CreateCategoryView(CreateView):
         site.categories.append(new_category)
 
 
+class AddStudentByCourseCreateView(CreateView):
 
+    template_name = 'add_student.html'
+
+    def get_context_data(self):
+        context = super().get_context_data()
+        context['courses'] = site.courses
+        context['students'] = site.students
+        return context
+
+    def create_obj(self, data: dict):
+
+        course_name = data['course_name']
+        course_name = Application.decode_value(course_name)
+        course = site.get_course(course_name)
+        student_name = data['student_name']
+        student_name = Application.decode_value(student_name)
+        student = site.get_student(student_name)
+        course.add_student(student)
 
 
 
@@ -130,6 +151,8 @@ urlpatterns = {
     '/category-list/': category_list,
     '/_course-list_/': course_list,
     '/create-student/': CreateStudentView(),
+    '/list-student/': ListStudent(),
+    '/add-student/': AddStudentByCourseCreateView(),
 
     # '/_course-list_/(?P<pk>\d+)/$':all_course,
 
