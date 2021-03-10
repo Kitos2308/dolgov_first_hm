@@ -44,7 +44,7 @@ def create_course(request):
 class CreateStudentView(CreateView):
     template_name = "create_student.html"
 
-
+    tmp = None
     def create_obj(self, data: dict):
         name = data['name']
         name = Application.decode_value(name)
