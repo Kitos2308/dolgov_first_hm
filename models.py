@@ -1,5 +1,5 @@
 from reusepatterns.prototypes import PrototypeMixin
-
+from mycoreorm import DomainObject
 
 # абстрактный пользователь
 class User:
@@ -13,7 +13,7 @@ class Teacher(User):
 
 
 # студент
-class Student(User):
+class Student(User, DomainObject):
     def __init__(self, name):
         self.courses = []
         super().__init__(name)
@@ -33,7 +33,7 @@ class UserFactory:
 
 
 # Категория
-class Category:
+class Category(DomainObject):
     # реестр?
     auto_id = 0
 
@@ -64,8 +64,8 @@ class Course(PrototypeMixin):
         self.students = []
         super().__init__()
 
-    def __getitem__(self, item):
-        return self.students[item]
+    # def __getitem__(self, item):
+    #     return self.students[item]
 
     def add_student(self, student: Student):
         self.students.append(student)

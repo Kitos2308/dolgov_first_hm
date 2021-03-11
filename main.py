@@ -2,6 +2,8 @@ from myframework import render, Application
 from models import TrainingSite
 from logging_mod import Logger, debug
 from myframework.mycore_cbv import ListView, CreateView
+from mycoreorm import UnitOfWork
+from mappers import MapperRegistry
 
 # Создание копирование курса, список курсов
 # Регистрация пользователя, список пользователей
@@ -9,7 +11,8 @@ from myframework.mycore_cbv import ListView, CreateView
 
 site = TrainingSite()
 logger = Logger('main')
-
+UnitOfWork.new_current()
+UnitOfWork.get_current().set_mapper_registry(MapperRegistry)
 
 def main_view(request):
     logger.log("main_view")
@@ -44,19 +47,26 @@ def create_course(request):
 class CreateStudentView(CreateView):
     template_name = "create_student.html"
 
-    tmp = None
+
     def create_obj(self, data: dict):
         name = data['name']
         name = Application.decode_value(name)
         new_obj = site.create_user('student', name)
         site.students.append(new_obj)
+        new_obj.mark_new()
+        UnitOfWork.get_current().commit()
 
 
 
 
 class ListStudent(ListView):
     template_name = 'student_list.html'
-    queryset = site.students
+    # queryset = site.students
+
+
+    def get_queryset(self):
+        mapper = MapperRegistry.get_current_mapper('student')
+        return mapper.all()
 
 
 
@@ -74,7 +84,10 @@ class CreateCategoryView(CreateView):
         print(data)
         name = data['name']
         name = Application.decode_value(name)
+        new_obj = site.create_category(name, None)
         category_id = data.get('category_id')
+        new_obj.mark_new()
+        UnitOfWork.get_current().commit()
 
 
         category = None
@@ -83,6 +96,8 @@ class CreateCategoryView(CreateView):
 
         new_category = site.create_category(name, category)
         site.categories.append(new_category)
+
+
 
 
 class AddStudentByCourseCreateView(CreateView):
@@ -128,9 +143,11 @@ def copy_course(request):
 @debug
 def category_list(request):
     logger.log('Список категорий')
-    print("====================================================")
-    print(site.categories)
-    return '200 OK', render('category_list.html', objects_list=site.categories)
+    # print("====================================================")
+    # print(site.categories)
+    mapper = MapperRegistry.get_current_mapper('category')
+
+    return '200 OK', render('category_list.html', objects_list=mapper.all())
 
 def course_list(request):
     logger.log('Список курсов')
